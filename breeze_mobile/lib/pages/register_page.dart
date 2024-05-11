@@ -40,7 +40,8 @@ class _RegisterPageState extends State<RegisterPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(e.toString()),
+            title: Text("Error"),
+            content: Text(e.toString()),
           ),
         );
       }
@@ -109,7 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
             MyButton(
               text: "Sign Up",
-              onTap: () {},
+              onTap: register,
             ),
 
             const SizedBox(height: 25),
@@ -118,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Not a member?",
+                  "Already have an account?",
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.inversePrimary),
                 ),

@@ -40,13 +40,51 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // forgot password
-  void forgotPassword() {
+  void _resetPassword() async {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Forgot Password"),
-        backgroundColor: Theme.of(context).colorScheme.background,
-      ),
+      builder: (context) {
+        TextEditingController resetEmailController = TextEditingController();
+        return AlertDialog(
+          title: Text("Reset Password"),
+          content: TextField(
+            controller: resetEmailController,
+            decoration: InputDecoration(
+              hintText: "Input your Email",
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                try {
+                  await AuthService()
+                      .sendPasswordResetEmail(resetEmailController.text);
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            "Password reset link has been sent to your email")),
+                  );
+                } catch (e) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content:
+                            Text("Failed to send password reset email: $e")),
+                  );
+                }
+              },
+              child: Text("Reset"),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -113,6 +151,28 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: widget.onTap,
                   child: Text(
                     "Register now",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Forgot Password?",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary),
+                ),
+                const SizedBox(width: 4),
+                GestureDetector(
+                  onTap: _resetPassword,
+                  child: Text(
+                    "Reset now",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.inversePrimary,
                       fontWeight: FontWeight.bold,
