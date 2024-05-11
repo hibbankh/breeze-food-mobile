@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:breeze_mobile/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../components/my_button.dart';
@@ -16,10 +19,42 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  // text editing controllers
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  // register method
+  void register() async {
+    // get auth service
+    final _authService = AuthService();
+
+    // check password match = create user
+    if (passwordController.text == confirmPasswordController.text) {
+      try {
+        await _authService.signUpWithEmailPassword(
+          emailController.text,
+          passwordController.text,
+        );
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(e.toString()),
+          ),
+        );
+      }
+    }
+    // show error
+    else {
+      showDialog(
+        context: context,
+        builder: (context) => const AlertDialog(
+          title: Text("Password does not match"),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

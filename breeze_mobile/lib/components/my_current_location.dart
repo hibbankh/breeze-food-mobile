@@ -1,7 +1,10 @@
+import 'package:breeze_mobile/models/restaurant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyCurrentLocation extends StatelessWidget {
-  const MyCurrentLocation({super.key});
+  final TextEditingController textController = TextEditingController();
+  MyCurrentLocation({super.key});
 
   void openLocationSearchBox(BuildContext context) {
     showDialog(
@@ -12,12 +15,24 @@ class MyCurrentLocation extends StatelessWidget {
           decoration: InputDecoration(hintText: "Search address.."),
         ),
         actions: [
+          // cancel button
           MaterialButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              textController.clear();
+            },
             child: const Text('Cancel'),
           ),
+
+          // save button
           MaterialButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              // update delivery address
+              String newAddress = textController.text;
+              context.read<Restaurant>().updateDeliveryAddress(newAddress);
+              Navigator.pop(context);
+              textController.clear();
+            },
             child: const Text('Save'),
           ),
         ],
@@ -40,14 +55,19 @@ class MyCurrentLocation extends StatelessWidget {
             onTap: () => openLocationSearchBox(context),
             child: Row(
               children: [
-                Text(
-                  "Central Point UTM",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontWeight: FontWeight.bold,
+                Consumer<Restaurant>(
+                  builder: (context, restaurant, child) => Text(
+                    restaurant.deliveryAddress,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                Icon(Icons.keyboard_arrow_down_rounded),
+                Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
               ],
             ),
           )

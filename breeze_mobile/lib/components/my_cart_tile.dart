@@ -24,6 +24,7 @@ class MyCartTile extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // food image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
@@ -32,30 +33,38 @@ class MyCartTile extends StatelessWidget {
                       height: 100,
                     ),
                   ),
+
                   const SizedBox(width: 10),
+
+                  // food name and price
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // food name
                       Text(cartItem.food.name),
+                      // food price
                       Text(
                         '\RM' + cartItem.food.price.toString(),
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.primary),
                       ),
+
+                      const SizedBox(height: 10),
+
+                      // increment or decrement quantity
+                      QuantitySelector(
+                        quantity: cartItem.quantity,
+                        food: cartItem.food,
+                        onIncrement: () {
+                          restaurant.addToCart(
+                              cartItem.food, cartItem.selectedAddons);
+                        },
+                        onDecrement: () {
+                          restaurant.removeFromCart(cartItem);
+                        },
+                      )
                     ],
                   ),
-                  const Spacer(),
-                  QuantitySelector(
-                    quantity: cartItem.quantity,
-                    food: cartItem.food,
-                    onIncrement: () {
-                      restaurant.addToCart(
-                          cartItem.food, cartItem.selectedAddons);
-                    },
-                    onDecrement: () {
-                      restaurant.removeFromCart(cartItem);
-                    },
-                  )
                 ],
               ),
             ),

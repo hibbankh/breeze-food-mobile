@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'food.dart';
 
 class Restaurant extends ChangeNotifier {
+  // list of menu
   final Set<Food> _menu = {
     // rice
     Food(
@@ -220,12 +221,19 @@ class Restaurant extends ChangeNotifier {
       ],
     ),
   };
+  // user cart
+  final List<CartItem> _cart = [];
+
+  // delivery address can change or update
+  String _deliveryAddress = 'Center Point';
+
   //G E T T E R S
   Set<Food> get menu => _menu;
   List<CartItem> get cart => _cart;
+  String get deliveryAddress => _deliveryAddress;
 
   //O P E R A T I O N S
-  final List<CartItem> _cart = [];
+
   // add to cart
   void addToCart(Food food, List<Addon> selectedAddons) {
     CartItem? cartItem = _cart.firstWhereOrNull((item) {
@@ -286,6 +294,12 @@ class Restaurant extends ChangeNotifier {
     notifyListeners();
   }
 
+  //update delivery address
+  void updateDeliveryAddress(String newAddress) {
+    _deliveryAddress = newAddress;
+    notifyListeners();
+  }
+
   //H E L P E R S
   // generate a receipt
   String displayCartReceipt() {
@@ -314,6 +328,7 @@ class Restaurant extends ChangeNotifier {
     receipt.writeln();
     receipt.writeln("Total Items: ${getTotalItemCount()}");
     receipt.writeln("Total Price: ${_formatPrice(getTotalPrice())}");
+    receipt.writeln("Delivery Address: $deliveryAddress");
     return receipt.toString();
   }
 

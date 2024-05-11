@@ -1,7 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:breeze_mobile/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:breeze_mobile/components/my_button.dart';
 import 'package:breeze_mobile/components/my_textfield.dart';
-import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -13,16 +15,37 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  // text editing controller
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  void login() {
-    //
+  // login method
+  void login() async {
+    // get instance of auth service
+    final _authService = AuthService();
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomePage(),
+    // try sign in
+    try {
+      await _authService.signInWithEmailPassword(
+          emailController.text, passwordController.text);
+    } catch (e) {
+      // show error
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
+      );
+    }
+  }
+
+  // forgot password
+  void forgotPassword() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Forgot Password"),
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
     );
   }
