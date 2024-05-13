@@ -31,8 +31,7 @@ class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
         backgroundColor: Colors.transparent,
       ),
       bottomNavigationBar: _buildBottomNavBar(context),
-      body: SingleChildScrollView(
-        // Tambahkan SingleChildScrollView di sini
+      body: const SingleChildScrollView(
         child: Column(
           children: [
             MyReceipt(),

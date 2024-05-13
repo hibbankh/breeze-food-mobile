@@ -98,17 +98,17 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             //
             Icon(
-              Icons.lock_open_rounded,
-              size: 100,
+              Icons.air_rounded,
+              size: 200,
               color: Theme.of(context).colorScheme.inversePrimary,
             ),
 
             const SizedBox(height: 25),
 
             Text(
-              "Food Delivery App",
+              "Breeze Food Delivery",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 30,
                 color: Theme.of(context).colorScheme.inversePrimary,
               ),
             ),
