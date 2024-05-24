@@ -4,6 +4,7 @@ import 'package:breeze_mobile/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:breeze_mobile/components/my_button.dart';
 import 'package:breeze_mobile/components/my_textfield.dart';
+import 'admin/adminlogin_page.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -22,11 +23,11 @@ class _LoginPageState extends State<LoginPage> {
   // login method
   void login() async {
     // get instance of auth service
-    final _authService = AuthService();
+    final authService = AuthService();
 
     // try sign in
     try {
-      await _authService.signInWithEmailPassword(
+      await authService.signInWithEmailPassword(
           emailController.text, passwordController.text);
     } catch (e) {
       // show error
@@ -46,10 +47,10 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context) {
         TextEditingController resetEmailController = TextEditingController();
         return AlertDialog(
-          title: Text("Reset Password"),
+          title: const Text("Reset Password"),
           content: TextField(
             controller: resetEmailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "Input your Email",
             ),
           ),
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () async {
@@ -67,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                       .sendPasswordResetEmail(resetEmailController.text);
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                         content: Text(
                             "Password reset link has been sent to your email")),
                   );
@@ -80,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 }
               },
-              child: Text("Reset"),
+              child: const Text("Reset"),
             ),
           ],
         );
@@ -159,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -180,6 +181,22 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 25),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminLoginPage()),
+                );
+              },
+              child: Text(
+                "Admin",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),

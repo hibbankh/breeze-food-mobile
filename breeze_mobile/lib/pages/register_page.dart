@@ -27,12 +27,12 @@ class _RegisterPageState extends State<RegisterPage> {
   // register method
   void register() async {
     // get auth service
-    final _authService = AuthService();
+    final authService = AuthService();
 
     // check password match = create user
     if (passwordController.text == confirmPasswordController.text) {
       try {
-        await _authService.signUpWithEmailPassword(
+        await authService.signUpWithEmailPassword(
           emailController.text,
           passwordController.text,
         );
@@ -40,7 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text("Error"),
+            title: const Text("Error"),
             content: Text(e.toString()),
           ),
         );

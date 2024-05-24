@@ -2,7 +2,7 @@ import 'package:breeze_mobile/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _newPasswordController.text,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Password changed successfully")),
+        const SnackBar(content: Text("Password changed successfully")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profil'),
+        title: const Text('Profil'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -47,25 +47,25 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             TextFormField(
               controller: _oldPasswordController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Old Password',
                 border: OutlineInputBorder(),
               ),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _newPasswordController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'New Password',
                 border: OutlineInputBorder(),
               ),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _changePassword,
-              child: Text('Change Password'),
+              child: const Text('Change Password'),
             ),
           ],
         ),

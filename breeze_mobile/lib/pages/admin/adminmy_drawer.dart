@@ -1,19 +1,20 @@
 import 'package:breeze_mobile/components/my_drawer_tile.dart';
+import 'package:breeze_mobile/pages/login_page.dart';
+import 'package:breeze_mobile/pages/settings_page.dart';
 import 'package:breeze_mobile/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
-import '../pages/customer_rating_page.dart';
-import '../pages/order_history_page.dart';
-import '../pages/profile_pages.dart';
-import '../pages/settings_page.dart';
-
-class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+class AdminMyDrawer extends StatelessWidget {
+  const AdminMyDrawer({super.key});
 
   void logout(BuildContext context) {
-    final authService = AuthService();
-    authService.signOut();
-    Navigator.of(context).pushReplacementNamed('/login');
+    // final authService = AuthService();
+    // authService.signOut();
+    // Navigator.of(context).pushReplacementNamed('/login');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage(onTap: () {})),
+    );
   }
 
   @override
@@ -50,45 +51,6 @@ class MyDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SettingsPage(),
-                ),
-              );
-            },
-          ),
-          MyDrawerTile(
-            text: "PROFILE",
-            icon: Icons.person,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfilePage(),
-                ),
-              );
-            },
-          ),
-          MyDrawerTile(
-            text: "ORDER HISTORY",
-            icon: Icons.history,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const OrderHistoryPage(),
-                ),
-              );
-            },
-          ),
-          MyDrawerTile(
-            text: "RATING",
-            icon: Icons.rate_review,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CustomerRatingPage(),
                 ),
               );
             },

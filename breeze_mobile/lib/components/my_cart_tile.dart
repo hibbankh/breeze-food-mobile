@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 class MyCartTile extends StatelessWidget {
   final CartItem cartItem;
+
   const MyCartTile({super.key, required this.cartItem});
 
   @override
@@ -44,7 +45,7 @@ class MyCartTile extends StatelessWidget {
                       Text(cartItem.food.name),
                       // food price
                       Text(
-                        '\RM' + cartItem.food.price.toString(),
+                        'RM${cartItem.food.price}',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.primary),
                       ),
@@ -81,7 +82,7 @@ class MyCartTile extends StatelessWidget {
                           label: Row(
                             children: [
                               Text(addon.name),
-                              Text(' (\RM${addon.price})'),
+                              Text(' (RM${addon.price})'),
                             ],
                           ),
                           shape: StadiumBorder(

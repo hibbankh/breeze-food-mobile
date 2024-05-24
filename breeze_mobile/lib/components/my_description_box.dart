@@ -24,7 +24,7 @@ class MyDescriptionBox extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  '\RM 4',
+                  'RM 4',
                   style: myPrimaryTextStyle,
                 ),
                 Text(
