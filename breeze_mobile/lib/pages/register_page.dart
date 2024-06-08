@@ -1,140 +1,58 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, use_super_parameters, prefer_const_constructors, use_build_context_synchronously
 
-import 'package:breeze_mobile/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
-import '../components/my_button.dart';
-import '../components/my_textfield.dart';
+import '../services/auth/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
-  final void Function()? onTap;
-
-  const RegisterPage({
-    super.key,
-    required this.onTap,
-  });
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // text editing controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-
-  // register method
-  void register() async {
-    // get auth service
-    final authService = AuthService();
-
-    // check password match = create user
-    if (passwordController.text == confirmPasswordController.text) {
-      try {
-        await authService.signUpWithEmailPassword(
-          emailController.text,
-          passwordController.text,
-        );
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Error"),
-            content: Text(e.toString()),
-          ),
-        );
-      }
-    }
-    // show error
-    else {
-      showDialog(
-        context: context,
-        builder: (context) => const AlertDialog(
-          title: Text("Password does not match"),
-        ),
-      );
-    }
-  }
+  final AuthService _authService = AuthService();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: Center(
+      appBar: AppBar(
+        title: Text('Register'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //
-            Icon(
-              Icons.lock_open_rounded,
-              size: 100,
-              color: Theme.of(context).colorScheme.inversePrimary,
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'Email'),
             ),
-
-            const SizedBox(height: 25),
-
-            Text(
-              "Create your account",
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).colorScheme.inversePrimary,
-              ),
-            ),
-
-            const SizedBox(height: 25),
-
-            MyTextField(
-              controller: emailController,
-              hintText: "Email",
-              obscureText: false,
-            ),
-
-            const SizedBox(height: 10),
-
-            MyTextField(
-              controller: passwordController,
-              hintText: "Password",
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-
-            const SizedBox(height: 10),
-
-            MyTextField(
-              controller: confirmPasswordController,
-              hintText: "Confirm Password",
-              obscureText: true,
-            ),
-
-            const SizedBox(height: 10),
-
-            MyButton(
-              text: "Sign Up",
-              onTap: register,
-            ),
-
-            const SizedBox(height: 25),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Already have an account?",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary),
-                ),
-                const SizedBox(width: 4),
-                GestureDetector(
-                  onTap: widget.onTap,
-                  child: Text(
-                    "Login now",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
+            ElevatedButton(
+              onPressed: () async {
+                String email = _emailController.text;
+                String password = _passwordController.text;
+                try {
+                  await _authService.signUpWithEmailPassword(email, password);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Registration successful')),
+                  );
+                  // Navigate to the next page or login
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text('Failed to register: ${e.toString()}')),
+                  );
+                }
+              },
+              child: Text('Register'),
             ),
           ],
         ),

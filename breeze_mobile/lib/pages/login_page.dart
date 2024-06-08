@@ -1,10 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
-import 'package:breeze_mobile/services/auth/auth_service.dart';
-import 'package:flutter/material.dart';
 import 'package:breeze_mobile/components/my_button.dart';
 import 'package:breeze_mobile/components/my_textfield.dart';
-import 'admin/adminlogin_page.dart';
+import 'package:breeze_mobile/pages/register_page.dart';
+import 'package:breeze_mobile/services/auth/auth_service.dart';
+import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -149,7 +149,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(width: 4),
                 GestureDetector(
-                  onTap: widget.onTap,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                  ),
                   child: Text(
                     "Register now",
                     style: TextStyle(
@@ -183,21 +186,21 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
             const SizedBox(height: 25),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AdminLoginPage()),
-                );
-              },
-              child: Text(
-                "Admin",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => OrderMainPage()),
+            //     );
+            //   },
+            //   child: Text(
+            //     "Admin",
+            //     style: TextStyle(
+            //       color: Theme.of(context).colorScheme.inversePrimary,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

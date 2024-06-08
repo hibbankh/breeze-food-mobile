@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:breeze_mobile/components/my_quantity_selector.dart';
 import 'package:breeze_mobile/models/cart_item.dart';
 import 'package:breeze_mobile/models/restaurant.dart';
@@ -28,10 +30,13 @@ class MyCartTile extends StatelessWidget {
                   // food image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      cartItem.food.imagePath,
-                      width: 100,
+                    child: Container(
                       height: 100,
+                      width: 100,
+                      child: Image.network(
+                        cartItem.food.imagePath,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
 

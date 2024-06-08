@@ -1,11 +1,13 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:breeze_mobile/components/my_button.dart';
 import 'package:breeze_mobile/components/my_cart_tile.dart';
 import 'package:breeze_mobile/models/restaurant.dart';
 import 'package:breeze_mobile/pages/payment_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../services/payment/payment_sevice.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -13,7 +15,8 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<Restaurant>(builder: (context, restaurant, child) {
-      final userCart = restaurant.cart;
+      late PaymentService paymentService = PaymentService();
+      final userCart = restaurant.cart; // ==> final List<CartItem> _cart = [];
       return Scaffold(
         appBar: AppBar(
           title: const Text('Cart'),
@@ -73,13 +76,14 @@ class CartPage extends StatelessWidget {
             MyButton(
                 text: "Go to checkout",
                 onTap: () async {
-                  var userCard = await _getCard();
+                  var userCard = await paymentService.getCard();
                   if (context.mounted) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => PaymentPage(
                           card: userCard,
+                          cart: userCart,
                         ),
                       ),
                     );
@@ -89,20 +93,5 @@ class CartPage extends StatelessWidget {
         ),
       );
     });
-  }
-
-  Future<UserCard> _getCard() async {
-    try {
-      var uid = FirebaseAuth.instance.currentUser?.uid;
-      if (uid == null || uid.isEmpty) {
-        return UserCard();
-      }
-      var res =
-          await FirebaseFirestore.instance.collection("cards").doc(uid).get();
-      return UserCard.fromJson(res.data());
-    } catch (e) {
-      print(e);
-    }
-    return UserCard();
   }
 }

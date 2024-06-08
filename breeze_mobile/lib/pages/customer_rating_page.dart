@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: prefer_final_fields, library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class CustomerRatingPage extends StatefulWidget {
   const CustomerRatingPage({super.key});

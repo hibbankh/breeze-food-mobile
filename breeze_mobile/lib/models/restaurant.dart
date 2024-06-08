@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:breeze_mobile/models/cart_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
@@ -84,7 +86,7 @@ class Restaurant extends ChangeNotifier {
     try {
       var uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid != null && uid.isNotEmpty) {
-      //  print(UserCart(items: _cart).toJson());
+        //  print(UserCart(items: _cart).toJson());
         await FirebaseFirestore.instance
             .collection("carts")
             .doc(uid)
@@ -145,6 +147,11 @@ class Restaurant extends ChangeNotifier {
   void clearCart() {
     _cart.clear();
     _saveCartData();
+    notifyListeners();
+  }
+
+  void addFood(Food food) {
+    _menu.add(food);
     notifyListeners();
   }
 

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:breeze_mobile/pages/login_page.dart';
 import 'package:breeze_mobile/pages/register_page.dart';
+import 'package:flutter/material.dart';
 
 class LoginOrRegister extends StatefulWidget {
   const LoginOrRegister({super.key});
@@ -22,7 +22,7 @@ class _LoginOrRegister extends State<LoginOrRegister> {
     if (showLoginPage) {
       return LoginPage(onTap: togglePages);
     } else {
-      return RegisterPage(onTap: togglePages);
+      return RegisterPage();
     }
   }
 }

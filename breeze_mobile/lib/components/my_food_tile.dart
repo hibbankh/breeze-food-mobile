@@ -1,4 +1,7 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
+
 import '../models/food.dart';
 
 class FoodTile extends StatelessWidget {
@@ -44,10 +47,13 @@ class FoodTile extends StatelessWidget {
                 const SizedBox(width: 15),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    food.imagePath,
+                  child: Container(
                     height: 120,
                     width: 120,
+                    child: Image.network(
+                      food.imagePath,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ],

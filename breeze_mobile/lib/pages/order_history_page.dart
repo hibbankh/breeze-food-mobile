@@ -27,9 +27,17 @@ class OrderHistoryPage extends StatelessWidget {
               var data = doc.data() as Map<String, dynamic>;
               return ListTile(
                 title: Text('Order ID: ${doc.id}'),
-                subtitle: Text('Total Amount: ${data['totalAmount']}'),
-                trailing: Text('Status: ${data['status']}'),
-                
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Order Date: ${data['orderDate']}'),
+                    Text('Items: ${data['items']}'),
+                    Text('Shipping Address: ${data['shippingAddress']}'),
+                    Text('Total Amount: ${data['totalAmount']}'),
+                    Text('Status: ${data['status']}'),
+                  ],
+                ),
+                isThreeLine: true,
               );
             }).toList(),
           );
