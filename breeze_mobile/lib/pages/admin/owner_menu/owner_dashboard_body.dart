@@ -166,7 +166,7 @@ class _OwnerDashboardBodyPageState extends State<OwnerDashboardBodyPage>
             SliverAppBar(
               pinned: true,
               floating: true,
-              title: Text('Owner Dashboard'),
+              title: Text('Edit Menu'),
               bottom: TabBar(
                 controller: _tabController,
                 isScrollable: true,

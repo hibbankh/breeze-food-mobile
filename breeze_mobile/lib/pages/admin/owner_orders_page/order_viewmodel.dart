@@ -122,6 +122,62 @@ class OrderViewModel extends Viewmodel {
     }
   }
 
+  Future<List<FoodOrder>> getOrdersByStatus(OrderStatus status) async {
+    try {
+      _isLoading = true;
+      _errorMessage = null;
+      update();
+      final list = await _orderService.getOrders();
+      _orders = list.where((order) => order.status == status).toList();
+      return _orders;
+    } catch (e) {
+      _errorMessage = 'Error fetching orders by status: $e';
+      return [];
+    } finally {
+      _isLoading = false;
+      update();
+    }
+  }
+
+  Future<FoodOrder?> updateOrderStatus(
+      String? orderId, OrderStatus newStatus) async {
+    if (orderId == null) {
+      _errorMessage = 'Invalid order ID';
+      notifyListeners();
+      return null;
+    }
+
+    try {
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+
+      // Fetch the order by ID
+      FoodOrder? order = await _orderService.getOrderById(orderId);
+      order?.printOrder();
+      if (order != null) {
+        // Update the status of the fetched order
+        order.status = newStatus;
+        // Call updateOrder to save changes
+        await _orderService.updateOrder(orderId, order.toJson());
+        // Update the order list in the view model
+        int index = _orders.indexWhere((order) => order.id == orderId);
+        if (index != -1) {
+          _orders[index] = order;
+          notifyListeners();
+        }
+        return order; // Return the updated order
+      }
+    } catch (e) {
+      _errorMessage = 'Error updating order status: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    return null;
+  }
+
   @override
   void init() {
     getAllOrders();

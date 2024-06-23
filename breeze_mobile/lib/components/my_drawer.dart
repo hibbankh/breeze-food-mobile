@@ -1,14 +1,40 @@
 import 'package:breeze_mobile/components/my_drawer_tile.dart';
 import 'package:breeze_mobile/services/auth/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../pages/customer_rating_page.dart';
 import '../pages/order_history_page.dart';
 import '../pages/profile_pages.dart';
 import '../pages/settings_page.dart';
+import 'package:breeze_mobile/models/user.dart';
 
-class MyDrawer extends StatelessWidget {
+class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
+
+  @override
+  _MyDrawerState createState() => _MyDrawerState();
+}
+
+class _MyDrawerState extends State<MyDrawer> {
+  UserModel? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserDetails();
+  }
+
+  Future<void> _fetchUserDetails() async {
+    User? currentUser = AuthService().getCurrentUser();
+    if (currentUser != null) {
+      UserModel? user = await AuthService().getUserDetails(currentUser.uid);
+      if (user != null) {
+        setState(() {
+          _user = user;
+        });
+      }
+    }
+  }
 
   void logout(BuildContext context) {
     final authService = AuthService();
@@ -19,7 +45,7 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: const Color.fromRGBO(255, 166, 0, 1),
       child: Column(
         children: [
           Padding(
@@ -30,6 +56,15 @@ class MyDrawer extends StatelessWidget {
               color: Theme.of(context).colorScheme.inversePrimary,
             ),
           ),
+          if (_user != null)
+            Text(
+              'Hi! ${_user!.username}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.inversePrimary,
+                fontSize: 30,
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: Divider(
@@ -76,19 +111,6 @@ class MyDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const OrderHistoryPage(),
-                ),
-              );
-            },
-          ),
-          MyDrawerTile(
-            text: "RATING",
-            icon: Icons.rate_review,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CustomerRatingPage(),
                 ),
               );
             },

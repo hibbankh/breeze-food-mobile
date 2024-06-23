@@ -11,10 +11,20 @@ class OrderServiceImpl implements OrderService {
   @override
   Future<FoodOrder?> addOrder(Map<String, dynamic> orderData) async {
     try {
+      // Add the order data to the collection without an ID
       DocumentReference docRef =
           await _store.collection('myorders').add(orderData);
+
+      // Fetch the document to ensure consistency and set the ID field in the data
       DocumentSnapshot docSnap = await docRef.get();
-      return FoodOrder.fromJson(docSnap.data() as Map<String, dynamic>);
+      Map<String, dynamic> orderWithId = docSnap.data() as Map<String, dynamic>;
+      orderWithId['id'] = docRef.id;
+
+      // Update the document with the generated ID
+      await docRef.update({'id': docRef.id});
+
+      // Return the FoodOrder object with the correct ID
+      return FoodOrder.fromJson(orderWithId);
     } catch (e) {
       print('Error adding order: $e');
       return null;
@@ -25,9 +35,12 @@ class OrderServiceImpl implements OrderService {
   Future<List<FoodOrder>> getOrders() async {
     try {
       QuerySnapshot querySnapshot = await _store.collection('myorders').get();
-      return querySnapshot.docs
-          .map((doc) => FoodOrder.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
+      return querySnapshot.docs.map((doc) {
+        // Create FoodOrder object and set the ID
+        Map<String, dynamic> orderData = doc.data() as Map<String, dynamic>;
+        orderData['id'] = doc.id;
+        return FoodOrder.fromJson(orderData);
+      }).toList();
     } catch (e) {
       print('Error getting orders: $e');
       return [];
@@ -39,9 +52,13 @@ class OrderServiceImpl implements OrderService {
     try {
       DocumentSnapshot docSnap =
           await _store.collection('myorders').doc(orderId).get();
-      return docSnap.exists
-          ? FoodOrder.fromJson(docSnap.data() as Map<String, dynamic>)
-          : null;
+      if (docSnap.exists) {
+        Map<String, dynamic> orderData = docSnap.data() as Map<String, dynamic>;
+        orderData['id'] = docSnap.id;
+        return FoodOrder.fromJson(orderData);
+      } else {
+        return null;
+      }
     } catch (e) {
       print('Error getting order by ID: $e');
       return null;
@@ -74,9 +91,12 @@ class OrderServiceImpl implements OrderService {
           .collection('myorders')
           .where('orderDate', isEqualTo: date.toIso8601String())
           .get();
-      return querySnapshot.docs
-          .map((doc) => FoodOrder.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
+      return querySnapshot.docs.map((doc) {
+        // Create FoodOrder object and set the ID
+        Map<String, dynamic> orderData = doc.data() as Map<String, dynamic>;
+        orderData['id'] = doc.id;
+        return FoodOrder.fromJson(orderData);
+      }).toList();
     } catch (e) {
       print('Error getting orders by date: $e');
       return [];

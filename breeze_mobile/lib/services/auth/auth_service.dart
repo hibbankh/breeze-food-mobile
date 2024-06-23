@@ -53,6 +53,7 @@ class AuthService {
         'email': email,
         'role': 'customer', // Default role
         'created_at': FieldValue.serverTimestamp(),
+        'username': email,
       });
 
       return userCredential;
@@ -92,6 +93,37 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       print("Error changing password: ${e.message}");
       throw Exception(e.message);
+    }
+  }
+
+  Future<void> updateUsername(String uid, String newUsername) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        'username': newUsername,
+      });
+    } catch (e) {
+      throw Exception('Failed to update username: $e');
+    }
+  }
+
+  Future<void> deleteUserAccount() async {
+    User? user = _firebaseAuth.currentUser;
+
+    if (user != null) {
+      try {
+        // Delete user data from Firestore
+        await _firestore.collection('users').doc(user.uid).delete();
+
+        // Delete user authentication account
+        await user.delete();
+
+        print("User account deleted successfully.");
+      } on FirebaseAuthException catch (e) {
+        print("Error deleting user account: ${e.message}");
+        throw Exception(e.message);
+      }
+    } else {
+      throw Exception("No user currently signed in.");
     }
   }
 }

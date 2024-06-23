@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:breeze_mobile/models/cart_item.dart';
+import 'package:breeze_mobile/models/orders.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,12 +20,17 @@ class Restaurant extends ChangeNotifier {
   // delivery address can change or update
   String _deliveryAddress = 'Center Point';
 
+  // food note
+  String _foodNote = '';
+
   //G E T T E R S
   Set<Food> get menu => _menu;
 
   List<CartItem> get cart => _cart;
 
   String get deliveryAddress => _deliveryAddress;
+
+  String get foodNote => _foodNote;
 
   Restaurant() {
     initData();
@@ -61,7 +67,8 @@ class Restaurant extends ChangeNotifier {
   }
 
   // add to cart
-  void addToCart(Food food, List<Addon> selectedAddons) {
+  void addToCart(Food food, List<Addon> selectedAddons,
+      [String foodNote = '']) {
     CartItem? cartItem = _cart.firstWhereOrNull((item) {
       bool isSameFood = item.food == food;
       bool isSameAddons =
@@ -76,6 +83,8 @@ class Restaurant extends ChangeNotifier {
         CartItem(food: food, selectedAddons: selectedAddons),
       );
     }
+
+    _foodNote = foodNote;
 
     _saveCartData();
 
@@ -161,10 +170,28 @@ class Restaurant extends ChangeNotifier {
     notifyListeners();
   }
 
+  // get current order for receipt
+  FoodOrder getCurrentOrder() {
+    return FoodOrder(
+      items: _cart,
+      orderDate: DateTime.now(),
+      totalPrice: getTotalPrice().toDouble(),
+      deliveryAddress: _deliveryAddress,
+      foodNote: _foodNote,
+    );
+  }
+
   //H E L P E R S
   // generate a receipt
   String displayCartReceipt() {
     final receipt = StringBuffer();
+
+    // Get current user's email
+    User? user = FirebaseAuth.instance.currentUser;
+    String? userEmail = user?.email ?? "";
+
+    // Insert the email into the receipt
+    receipt.writeln("Hi! $userEmail");
     receipt.writeln("Here is your receipt.");
     receipt.writeln();
 

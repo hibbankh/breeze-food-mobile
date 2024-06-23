@@ -13,7 +13,8 @@ class OwnerBottomAppBar extends StatefulWidget {
 class _OwnerBottomAppBarState extends State<OwnerBottomAppBar> {
   late String orders = "Orders";
   late String menu = "Menu";
-  late String profile = "Profile";
+  late String list = "List";
+  // late String profile = "Profile";
   var _currentIndex = 0;
 
   @override
@@ -24,11 +25,14 @@ class _OwnerBottomAppBarState extends State<OwnerBottomAppBar> {
           Navigator.pushNamed(context, Routes.home);
           return;
         case 1:
-          Navigator.pushNamed(context, Routes.owner_viewProduct);
+          Navigator.pushNamed(context, Routes.order_list);
           return;
         case 2:
-          Navigator.pushNamed(context, Routes.home);
+          Navigator.pushNamed(context, Routes.owner_viewProduct);
           return;
+        // case 2:
+        //   Navigator.pushNamed(context, Routes.home);
+        //   return;
       }
     }
 
@@ -42,13 +46,17 @@ class _OwnerBottomAppBarState extends State<OwnerBottomAppBar> {
         BottomNavigationBarItem(
             label: orders, icon: Icon(Icons.receipt_long_outlined)),
         BottomNavigationBarItem(
+          label: list,
+          icon: Icon(Icons.list_alt_outlined),
+        ),
+        BottomNavigationBarItem(
           label: menu,
           icon: Icon(Icons.dashboard_outlined),
         ),
-        BottomNavigationBarItem(
-          label: profile,
-          icon: Icon(Icons.person_outline),
-        ),
+        // BottomNavigationBarItem(
+        //   label: profile,
+        //   icon: Icon(Icons.person_outline),
+        // ),
       ],
     );
   }

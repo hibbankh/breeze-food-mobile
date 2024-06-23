@@ -11,7 +11,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Color.fromRGBO(255, 166, 0, 1),
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'order_details_page.dart'; // Make sure to import the CurrentOrderPage
 
-class OrderHistoryPage extends StatelessWidget {
-  const OrderHistoryPage({super.key});
+class OrderListbody extends StatelessWidget {
+  const OrderListbody({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Order History'),
-        backgroundColor: const Color.fromRGBO(255, 166, 0, 1),
-      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('myorders').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -33,15 +28,6 @@ class OrderHistoryPage extends StatelessWidget {
               var data = orders[index].data() as Map<String, dynamic>;
 
               return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          OrderDetailsPage(orderId: orders[index].id),
-                    ),
-                  );
-                },
                 child: Card(
                   margin: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 16.0),
@@ -110,6 +96,13 @@ class OrderHistoryPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Row(
             children: [
+              Image.network(
+                food['imagePath'],
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

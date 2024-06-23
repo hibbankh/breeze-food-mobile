@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../components/my_textfield.dart';
 import '../services/auth/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -26,15 +27,18 @@ class _RegisterPageState extends State<RegisterPage> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            MyTextField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              hintText: "Email",
+              obscureText: false,
             ),
-            TextField(
+            const SizedBox(height: 10),
+            MyTextField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              hintText: "Password",
               obscureText: true,
             ),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
                 String email = _emailController.text;

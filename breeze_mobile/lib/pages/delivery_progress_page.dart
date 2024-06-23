@@ -27,9 +27,7 @@ class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
+      appBar: _buildTopNavBar(context),
       bottomNavigationBar: _buildBottomNavBar(context),
       body: const SingleChildScrollView(
         child: Column(
@@ -37,6 +35,18 @@ class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
             MyReceipt(),
           ],
         ),
+      ),
+    );
+  }
+
+  AppBar _buildTopNavBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      leading: IconButton(
+        icon: const Icon(Icons.home),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/');
+        },
       ),
     );
   }

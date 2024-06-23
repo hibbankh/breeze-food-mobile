@@ -1,17 +1,18 @@
-// ignore_for_file: prefer_final_fields, library_private_types_in_public_api
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CustomerRatingPage extends StatefulWidget {
-  const CustomerRatingPage({super.key});
+  final String orderId;
+
+  const CustomerRatingPage({super.key, required this.orderId});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomerRatingPageState createState() => _CustomerRatingPageState();
 }
 
 class _CustomerRatingPageState extends State<CustomerRatingPage> {
-  TextEditingController _feedbackController = TextEditingController();
+  final TextEditingController _feedbackController = TextEditingController();
   double _rating = 0;
 
   @override
@@ -19,6 +20,7 @@ class _CustomerRatingPageState extends State<CustomerRatingPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rate Your Experience'),
+        backgroundColor: Color.fromRGBO(255, 166, 0, 1),
       ),
       body: Center(
         child: Column(
@@ -62,14 +64,15 @@ class _CustomerRatingPageState extends State<CustomerRatingPage> {
   void submitRating() async {
     try {
       await FirebaseFirestore.instance.collection('ratings').add({
+        'orderId': widget.orderId,
         'rating': _rating,
         'feedback': _feedbackController.text,
         'timestamp': Timestamp.now(),
       });
-      // Optionally, show a confirmation dialog or navigate to a new screen.
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Thank you for your feedback!'),
       ));
+      Navigator.pop(context); // Navigate back to the order details page
     } catch (e) {
       print('Error submitting rating: $e');
       // Handle error

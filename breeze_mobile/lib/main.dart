@@ -18,7 +18,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => Restaurant())
+        ChangeNotifierProvider(create: (context) => Restaurant()),
       ],
       child: const MyApp(),
     ),

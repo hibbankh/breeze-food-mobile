@@ -11,7 +11,7 @@ class MyDescriptionBox extends StatelessWidget {
         TextStyle(color: Theme.of(context).colorScheme.primary);
 
     return Padding(
-      padding: const EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 25),
+      padding: const EdgeInsets.only(left: 25, right: 25, top: 5, bottom: 50),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).colorScheme.secondary),

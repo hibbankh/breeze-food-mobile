@@ -88,6 +88,8 @@ class _PaymentPageState extends State<PaymentPage> {
         0.0,
         (sum, item) => sum + item.totalPrice,
       ),
+      deliveryAddress: '',
+      foodNote: '',
     ).toJson();
 
     String resultMessage;

@@ -4,6 +4,8 @@ import 'package:breeze_mobile/pages/admin/owner_orders_page/order_viewmodel.dart
 import 'package:flutter/material.dart';
 import 'package:map_mvvm/view/view.dart';
 
+import '../../../models/orders.dart';
+
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
 
@@ -117,155 +119,236 @@ class _OwnerPageState extends State<OrderPage> {
                   ],
                 ),
                 ViewWrapper<OrderViewModel>(
-                  builder: (context, viewModel) => ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: viewModel.count,
-                    itemBuilder: (context, orderIndex) {
-                      print("The length is ${viewModel.count}");
-                      final foodItem = viewModel.orders[orderIndex];
+                  builder: (context, viewModel) {
+                    // Filter the orders based on the status
+                    final filteredOrders = viewModel.orders.where((order) {
+                      if (status == "Pending") {
+                        return order.status == OrderStatus.pending;
+                      } else if (status == "Completed") {
+                        return order.status == OrderStatus.completed;
+                      } else if (status == "Rejected") {
+                        return order.status == OrderStatus.cancelled;
+                      }
+                      return false;
+                    }).toList();
 
-                      // Debug print statements
-                      print('Order Index: $orderIndex');
-                      print('Food items length: ${foodItem.items.length}');
+                    return ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: filteredOrders.length,
+                      itemBuilder: (context, orderIndex) {
+                        final foodItem = filteredOrders[orderIndex];
 
-                      return Column(
-                        children:
-                            List.generate(foodItem.items.length, (itemIndex) {
-                          final food = foodItem.items[itemIndex].food;
-                          final imageUrl = food.imagePath.isNotEmpty
-                              ? food.imagePath
-                              : "https://via.placeholder.com/100";
-
-                          return Card(
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  color: Color.fromARGB(179, 219, 219, 219),
-                                  width: 1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: InkWell(
-                              splashColor: Color.fromARGB(255, 254, 223, 188),
-                              onTap: () {
-                                // Handle item tap if necessary
-                              },
-                              child: SizedBox(
-                                width: 395,
-                                height: 125,
-                                child: Row(
-                                  children: <Widget>[
-                                    // Image Container
-                                    Container(
-                                      width: 100,
-                                      height: 100,
-                                      margin: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        image: DecorationImage(
-                                          image: NetworkImage(imageUrl),
-                                          fit: BoxFit.cover,
+                        return Column(
+                          children:
+                              List.generate(foodItem.items.length, (itemIndex) {
+                            final food = foodItem.items[itemIndex].food;
+                            final imageUrl = food.imagePath.isNotEmpty
+                                ? food.imagePath
+                                : "https://via.placeholder.com/100";
+                            return Card(
+                              elevation: 2.0,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Color.fromARGB(179, 219, 219, 219),
+                                    width: 1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: InkWell(
+                                splashColor: Color.fromARGB(255, 254, 223, 188),
+                                onTap: () {
+                                  // Handle item tap if necessary
+                                },
+                                child: SizedBox(
+                                  width: 395,
+                                  height: 125,
+                                  child: Row(
+                                    children: <Widget>[
+                                      // Image Container
+                                      Container(
+                                        width: 100,
+                                        height: 100,
+                                        margin: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            image: NetworkImage(imageUrl),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    // Food Details Container
-                                    Expanded(
-                                      flex: 7,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 20),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                                '${foodItem.orderItems[itemIndex].food.name}',
-                                                style: TextStyle(
-                                                    height: 1.5,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text(
-                                                'Category: ${foodItem.orderItems[itemIndex].food.name}',
-                                                style: TextStyle(height: 1.5)),
-                                          ],
+                                      // Food Details Container
+                                      Expanded(
+                                        flex: 7,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 20),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                  '${foodItem.items[itemIndex].food.name}',
+                                                  style: TextStyle(
+                                                      height: 1.5,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              Text(
+                                                  'Category: ${foodItem.items[itemIndex].food.name}',
+                                                  style:
+                                                      TextStyle(height: 1.5)),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    // Action Button Container
-                                    Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 20),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: <Widget>[
-                                            Row(
-                                              children: [
-                                                Flexible(
-                                                  child: IconButton(
-                                                    onPressed: () {
-                                                      // Handle edit action
-                                                    },
-                                                    icon: Icon(Icons.edit),
-                                                    color: Colors.green,
+                                      // Action Button Container
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 20),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: <Widget>[
+                                              Row(
+                                                children: [
+                                                  Flexible(
+                                                    child: IconButton(
+                                                      onPressed: () async {
+                                                        if (foodItem.id !=
+                                                            null) {
+                                                          FoodOrder? updatedOrder =
+                                                              await viewModel
+                                                                  .updateOrderStatus(
+                                                                      foodItem
+                                                                          .id!,
+                                                                      OrderStatus
+                                                                          .completed);
+                                                          if (updatedOrder !=
+                                                              null) {
+                                                            setState(() {
+                                                              // Update the order list with the updated order
+                                                              int index = viewModel
+                                                                  .orders
+                                                                  .indexWhere((order) =>
+                                                                      order
+                                                                          .id ==
+                                                                      updatedOrder
+                                                                          .id);
+                                                              if (index != -1) {
+                                                                viewModel.orders[
+                                                                        index] =
+                                                                    updatedOrder;
+                                                              }
+                                                            });
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                              content: Text(
+                                                                  "Order status updated to Completed"),
+                                                            ));
+                                                          }
+                                                        }
+                                                      },
+                                                      icon: Icon(Icons
+                                                          .thumb_up_alt_outlined),
+                                                      color: Colors.green,
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(width: 8),
-                                                Flexible(
-                                                  child: IconButton(
-                                                    onPressed: () {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return AlertDialog(
-                                                            title: Text(
-                                                                "Delete Product"),
-                                                            content: Text(
-                                                                "Are you sure you want to delete this product?"),
-                                                            actions: [
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                                child: Text(
-                                                                    "Cancel"),
-                                                              ),
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  // Handle delete action
-                                                                },
-                                                                child: Text(
-                                                                    "Delete"),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        },
-                                                      );
-                                                    },
-                                                    icon: Icon(Icons.delete),
-                                                    color: Colors.red,
+                                                  SizedBox(width: 16),
+                                                  Flexible(
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return AlertDialog(
+                                                              title: Text(
+                                                                  "Reject Item"),
+                                                              content: Text(
+                                                                  "Are you sure you want to reject this item?"),
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: Text(
+                                                                      "Cancel"),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    print(
+                                                                        'Order ID${foodItem.id}');
+                                                                    if (foodItem
+                                                                            .id !=
+                                                                        null) {
+                                                                      FoodOrder?
+                                                                          updatedOrder =
+                                                                          await viewModel.updateOrderStatus(
+                                                                              foodItem.id!,
+                                                                              OrderStatus.cancelled);
+                                                                      updatedOrder
+                                                                          ?.printOrder();
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      if (updatedOrder !=
+                                                                          null) {
+                                                                        setState(
+                                                                            () {
+                                                                          // Update the order list with the updated order
+                                                                          int index = viewModel.orders.indexWhere((order) =>
+                                                                              order.id ==
+                                                                              updatedOrder.id);
+                                                                          if (index !=
+                                                                              -1) {
+                                                                            viewModel.orders[index] =
+                                                                                updatedOrder;
+                                                                          }
+                                                                        });
+                                                                        ScaffoldMessenger.of(context)
+                                                                            .showSnackBar(SnackBar(
+                                                                          content:
+                                                                              Text("Order status updated to Rejected"),
+                                                                        ));
+                                                                      }
+                                                                    }
+                                                                  },
+                                                                  child: Text(
+                                                                      "Reject"),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                      icon: Icon(Icons.cancel),
+                                                      color: Colors.red,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
-                      );
-                    },
-                  ),
-                )
+                            );
+                          }),
+                        );
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -274,34 +357,3 @@ class _OwnerPageState extends State<OrderPage> {
     );
   }
 }
-
-                                                                //     () async {
-                                                                //   try {
-                                                                //     // Call deleteProduct method
-                                                                //     _adminService
-                                                                //         .deleteProduct(
-                                                                //             foodItem.name);
-                                                                //     final List<
-                                                                //             Food>
-                                                                //         updatedProducts =
-                                                                //         await _adminService
-                                                                //             .getProducts();
-                                                                //     print(
-                                                                //         "The deleted product, ${foodItem.name}");
-                                                                //     setState(
-                                                                //         () {
-                                                                //       // Assign the updated list of products to the viewModel
-                                                                //       viewModel = AsyncviewModel<
-                                                                //               List<Food>>.withData(
-                                                                //           ConnectionState
-                                                                //               .done,
-                                                                //           updatedProducts);
-                                                                //     });
-                                                                //     Navigator.pop(
-                                                                //         context); // Close the dialog
-                                                                //   } catch (e) {
-                                                                //     // Handle error if necessary
-                                                                //     print(
-                                                                //         'Error deleting product: $e');
-                                                                //   }
-                                                                // },
