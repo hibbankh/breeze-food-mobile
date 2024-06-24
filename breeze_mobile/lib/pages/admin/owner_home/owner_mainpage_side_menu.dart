@@ -66,23 +66,11 @@ class _OwnerSideMenuState extends State<OwnerSideMenu> {
                   SizedBox(
                     height: 60,
                   ),
-                  //!TODO display username here
-                  // FutureBuilder<DocumentSnapshot>(
-                  //   future: viewmodel.getCurrentUser(),
-                  //   builder: (context, AsyncSnapshot<DocumentSnapshot>snapshot),
-                  // ),
                 ]),
             decoration: BoxDecoration(
               color: Color.fromRGBO(200, 118, 22, 1),
             ),
           ),
-          // ListTile(
-          //   leading: Icon(Icons.person),
-          //   title: Text('Profile'),
-          //   onTap: () => {
-          //     // Navigator.pushNamed(context, Routes.profile)
-          //   },
-          // ),
           ListTile(
             leading: Icon(Icons.add_circle_outline),
             title: Text('Add Product'),
@@ -94,19 +82,6 @@ class _OwnerSideMenuState extends State<OwnerSideMenu> {
             title: Text('Revenue'),
             onTap: () => {Navigator.pushNamed(context, Routes.revenue)},
           ),
-          // ListTile(
-          //   leading: Icon(Icons.fastfood_rounded),
-          //   title: Text('View products'),
-          //   onTap: () => {
-          //     // Navigator.pushNamed(context, Routes.owner_viewProduct)
-          //   },
-          // ),
-          // ListTile(
-          //     leading: Icon(Icons.dashboard_customize_rounded),
-          //     title: Text('Dashboard'),
-          //     onTap: () {
-          //       // Navigator.pushNamed(context, Routes.owner_dashboard);
-          //     }),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),

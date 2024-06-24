@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 import 'package:map_mvvm/view/view.dart';
 
 import '../admin_viewmodel.dart';
@@ -30,27 +29,46 @@ class _AddProductToMenuState extends State<AddProductToMenu> {
   final TextEditingController _addonNameController = TextEditingController();
   final TextEditingController _addonPriceController = TextEditingController();
 
+  // Future<void> _pickImage() async {
+  //   if (kIsWeb) {
+  //     final pickedFile = await ImagePickerWeb.getImageAsBytes();
+  //     if (pickedFile != null) {
+  //       setState(() {
+  //         _webImage = pickedFile;
+  //         _image = null;
+  //       });
+  //     } else {
+  //       print('No image selected.');
+  //     }
+  //   } else {
+  //     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  //     if (pickedFile != null) {
+  //       setState(() {
+  //         _image = File(pickedFile.path);
+  //         _webImage = null;
+  //       });
+  //     } else {
+  //       print('No image selected.');
+  //     }
+  //   }
+  // }
   Future<void> _pickImage() async {
-    if (kIsWeb) {
-      final pickedFile = await ImagePickerWeb.getImageAsBytes();
-      if (pickedFile != null) {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      if (kIsWeb) {
+        final bytes = await pickedFile.readAsBytes();
         setState(() {
-          _webImage = pickedFile;
+          _webImage = bytes;
           _image = null;
         });
       } else {
-        print('No image selected.');
-      }
-    } else {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
         setState(() {
           _image = File(pickedFile.path);
           _webImage = null;
         });
-      } else {
-        print('No image selected.');
       }
+    } else {
+      print('No image selected.');
     }
   }
 

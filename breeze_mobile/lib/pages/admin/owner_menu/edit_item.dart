@@ -1,5 +1,16 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors_in_immutables, avoid_print, use_build_context_synchronously, prefer_const_constructors
 
+// import 'dart:io';
+// import 'dart:typed_data';
+
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:flutter/foundation.dart' show kIsWeb;
+// import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker_web/image_picker_web.dart';
+
+// import '../../../models/food.dart';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -8,7 +19,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 
 import '../../../models/food.dart';
 
@@ -46,27 +56,46 @@ class _EditMenuItemPageState extends State<EditMenuItemPage> {
         .toList();
   }
 
+  // Future<void> _pickImage() async {
+  //   if (kIsWeb) {
+  //     final pickedFile = await ImagePickerWeb.getImageAsBytes();
+  //     if (pickedFile != null) {
+  //       setState(() {
+  //         _webImage = pickedFile;
+  //         _image = null;
+  //       });
+  //     } else {
+  //       print('No image selected.');
+  //     }
+  //   } else {
+  //     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  //     if (pickedFile != null) {
+  //       setState(() {
+  //         _image = File(pickedFile.path);
+  //         _webImage = null;
+  //       });
+  //     } else {
+  //       print('No image selected.');
+  //     }
+  //   }
+  // }
   Future<void> _pickImage() async {
-    if (kIsWeb) {
-      final pickedFile = await ImagePickerWeb.getImageAsBytes();
-      if (pickedFile != null) {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      if (kIsWeb) {
+        final bytes = await pickedFile.readAsBytes();
         setState(() {
-          _webImage = pickedFile;
+          _webImage = bytes;
           _image = null;
         });
       } else {
-        print('No image selected.');
-      }
-    } else {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
         setState(() {
           _image = File(pickedFile.path);
           _webImage = null;
         });
-      } else {
-        print('No image selected.');
       }
+    } else {
+      print('No image selected.');
     }
   }
 
